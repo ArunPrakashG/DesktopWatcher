@@ -1,0 +1,13 @@
+G:\GitHub-Projects\DesktopWatcher\bin\Debug\DesktopWatcher.exe.config
+G:\GitHub-Projects\DesktopWatcher\bin\Debug\DesktopWatcher.exe.manifest
+G:\GitHub-Projects\DesktopWatcher\bin\Debug\DesktopWatcher.application
+G:\GitHub-Projects\DesktopWatcher\bin\Debug\DesktopWatcher.exe
+G:\GitHub-Projects\DesktopWatcher\bin\Debug\DesktopWatcher.pdb
+G:\GitHub-Projects\DesktopWatcher\obj\Debug\DesktopWatcher.csprojAssemblyReference.cache
+G:\GitHub-Projects\DesktopWatcher\obj\Debug\DesktopWatcher.ProjectInstaller.resources
+G:\GitHub-Projects\DesktopWatcher\obj\Debug\DesktopWatcher.csproj.GenerateResource.cache
+G:\GitHub-Projects\DesktopWatcher\obj\Debug\DesktopWatcher.csproj.CoreCompileInputs.cache
+G:\GitHub-Projects\DesktopWatcher\obj\Debug\DesktopWatcher.exe.manifest
+G:\GitHub-Projects\DesktopWatcher\obj\Debug\DesktopWatcher.application
+G:\GitHub-Projects\DesktopWatcher\obj\Debug\DesktopWatcher.exe
+G:\GitHub-Projects\DesktopWatcher\obj\Debug\DesktopWatcher.pdb
