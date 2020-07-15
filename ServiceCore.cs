@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Management;
@@ -10,8 +10,8 @@ namespace DesktopWatcher {
 		private string IMAGE_DIRECTORY => Path.Combine(DesktopPath, "Images");
 		private string EDITOR_DIRECTORY => Path.Combine(DesktopPath, "Edited");
 
-		private readonly FileSystemWatcher Watcher;
-		private readonly string DesktopPath;
+		private FileSystemWatcher Watcher;
+		private string DesktopPath;
 		private DateTime LastReadTime;
 		private static readonly List<string> ImageExtensions = new List<string>() {
 			".jpg",
@@ -27,15 +27,7 @@ namespace DesktopWatcher {
 		};
 
 		public ServiceCore() {
-			InitializeComponent();
-			DesktopPath = GetDesktopPath();
-			EventLog.WriteEntry(DesktopPath);
-			Watcher = new FileSystemWatcher(DesktopPath, "*");
-			Watcher.Changed += OnChanged;
-			Watcher.Created += OnCreated;
-			Watcher.IncludeSubdirectories = false;
-			Watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.CreationTime;
-			EventLog.WriteEntry("File watcher started for path -> " + DesktopPath);
+			InitializeComponent();			
 		}
 
 		private void OnCreated(object sender, FileSystemEventArgs e) {
@@ -93,7 +85,7 @@ namespace DesktopWatcher {
 					}
 
 					break;
-				case WatcherChangeTypes.Deleted:				
+				case WatcherChangeTypes.Deleted:
 				case WatcherChangeTypes.Renamed:
 				case WatcherChangeTypes.All:
 					break;
@@ -101,6 +93,14 @@ namespace DesktopWatcher {
 		}
 
 		protected override void OnStart(string[] args) {
+			DesktopPath = GetDesktopPath();
+			EventLog.WriteEntry(DesktopPath);
+			Watcher = new FileSystemWatcher(DesktopPath, "*");
+			Watcher.Changed += OnChanged;
+			Watcher.Created += OnCreated;
+			Watcher.IncludeSubdirectories = false;
+			Watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.CreationTime;
+			EventLog.WriteEntry("File watcher started for path -> " + DesktopPath);
 			Watcher.EnableRaisingEvents = true;
 			base.OnStart(args);
 		}
@@ -137,18 +137,6 @@ namespace DesktopWatcher {
 			userName = userName?.Substring(userName.IndexOf(@"\") + 1);
 
 			return userName;
-		}
-
-		private bool IsSubDir(string parentPath, string childPath) {
-			Uri parentUri = new Uri(parentPath);
-			DirectoryInfo childUri = new DirectoryInfo(childPath).Parent;
-			while (childUri != null) {
-				if (new Uri(childUri.FullName) == parentUri) {
-					return true;
-				}
-				childUri = childUri.Parent;
-			}
-			return false;
 		}
 
 		private static async Task WaitForFile(string filename) {
