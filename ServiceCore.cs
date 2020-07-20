@@ -12,7 +12,6 @@ namespace DesktopWatcher {
 
 		private FileSystemWatcher Watcher;
 		private string DesktopPath;
-		private DateTime LastReadTime;
 		private static readonly List<string> ImageExtensions = new List<string>() {
 			".jpg",
 			".png",
@@ -39,11 +38,6 @@ namespace DesktopWatcher {
 				return;
 			}
 
-			if ((DateTime.Now - LastReadTime).TotalSeconds < 1) {
-				return;
-			}
-
-			LastReadTime = DateTime.Now;
 			await WaitForFile(e.FullPath).ConfigureAwait(false);
 			EventLog.WriteEntry($"File change ({e.ChangeType}) detected => " + e.FullPath);
 			switch (e.ChangeType) {
@@ -93,9 +87,9 @@ namespace DesktopWatcher {
 		}
 
 		protected override void OnStart(string[] args) {
-			DesktopPath = GetDesktopPath();
+			DesktopPath = AddQuotesIfRequired(GetDesktopPath());
 			EventLog.WriteEntry(DesktopPath);
-			Watcher = new FileSystemWatcher(DesktopPath, "*");
+			Watcher = new FileSystemWatcher(Path.GetDirectoryName(DesktopPath), "*");
 			Watcher.Changed += OnChanged;
 			Watcher.Created += OnCreated;
 			Watcher.IncludeSubdirectories = false;
@@ -109,6 +103,13 @@ namespace DesktopWatcher {
 			Watcher.EnableRaisingEvents = false;
 			Watcher.Dispose();
 			base.OnStop();
+		}
+
+		private string AddQuotesIfRequired(string path) {
+			return !string.IsNullOrWhiteSpace(path) ?
+				path.Contains(" ") && (!path.StartsWith("\"") && !path.EndsWith("\"")) ?
+					"\"" + path + "\"" : path :
+					string.Empty;
 		}
 
 		private string GetDesktopPath() => Path.Combine(Directory.GetParent(GetWindowsFolder()).Parent.Name, "Users", GetWindowsUserAccountName(), "Desktop");
